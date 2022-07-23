@@ -1,0 +1,227 @@
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+#define human 0
+#define computer 1
+const char* letters = "ABCDEFGHIJ";
+
+int player1;
+int player2;
+char a1[10][10], a2[10][10], b1[10][10], b2[10][10];
+int hit1 = 0, hit2 = 0;
+
+// определяем тип игрока
+int setplayer(int number) {
+	cout << "select player number #" << number << endl;
+	cout << "0 - human, 1 - computer: " << endl;
+	cin >> number;
+	return number;
+}
+
+// печатаем поле
+void printsea(char a[10][10]) {
+	system("CLS");
+	cout << "  " << letters << endl;
+	for (size_t i = 0; i < 10; i++)
+	{
+		cout << i << " ";
+		for (size_t j = 0; j < 10; j++)
+			cout << a[i][j];
+		cout << endl;
+	}
+}
+
+// печатаем поля с ходами обоих игроков
+void printsea2() {
+	system("CLS");
+	cout << "  " << letters << endl;
+	for (size_t i = 0; i < 10; i++)
+	{
+		cout << i << " ";
+		for (size_t j = 0; j < 10; j++)
+			cout << b1[i][j];
+		cout << endl;
+	}
+	cout << "  " << letters << endl;
+	for (size_t i = 0; i < 10; i++)
+	{
+		cout << i << " ";
+		for (size_t j = 0; j < 10; j++)
+			cout << b2[i][j];
+		cout << endl;
+	}
+}
+
+
+// расставляем корабль
+void setship(char a[10][10], char begin[2], char end[2]) {
+	int i1, i2, j1, j2;
+	i1 = int(begin[1]) - 48;	// в какой строке начало
+	j1 = int(begin[0]) - 65;	// в каком столбце начало
+	i2 = int(end[1]) - 48;		// строка - конц
+	j2 = int(end[0]) - 65;		// строкстолбец - конц
+
+	if (i1 == i2)		// если номера строк у начала и конца одинаковые - по горизонтали
+		for (int j = j1; j <= j2; j++)
+			a[i1][j] = '*';
+	else				// по вертикали
+		for (int i = i1; i <= i2; i++)
+			a[i][j1] = '*';
+}
+
+// заполняем поле
+void setsea(char a[10][10], char b[10][10]) {
+
+	// все заполняем пробелами
+	for (size_t i = 0; i < 10; i++)
+		for (size_t j = 0; j < 10; j++) {
+			a[i][j] = ' ';
+			b[i][j] = ' ';
+		}
+
+	for (int i = 4; i >= 1; i--)			// длина корабля от 4 до 1
+		for (int j = 1; j <= 5-i; j++) {	// количество кораблей от 1 до 4
+			printsea(a);
+			char begin[3], end[3];
+			cout << "ship length: " << i << endl;
+			cout << "\tbegin: ";			// начало
+			cin >> begin;
+			if (i > 1) {
+				cout << "\tend: ";			// конец
+				cin >> end;
+			}
+			else {
+				end[0] = begin[0];
+				end[1] = begin[1];
+			}
+			setship(a, begin, end);		// запоминаем корабль
+		}
+	
+
+}
+
+// читаем расстановку из файла
+void setsearandom(char a[10][10], char b[10][10], int p) {
+	// to do
+	ifstream f;
+	if (p == 1)
+		f.open("1.txt");
+	else
+		f.open("2.txt");
+	for (size_t i = 0; i < 10; i++) {
+		for (size_t j = 0; j < 10; j++)
+		{
+			f.get(a[i][j]);
+			b[i][j] = ' ';
+		}
+		char c;
+		f.get(c);
+
+	}
+
+	f.close();
+}
+
+// определяем тип игроков и заполняем поле
+void setplayers() {
+	player1 = setplayer(1);			// 1 игрок человек или компьютер
+	player2 = setplayer(2);			// 2 игрок человек или компьютер
+	if (player1 == human)			// если 1 игрок человек
+		setsea(a1, b1);				// заполняем вручную
+	else
+		setsearandom(a1, b1, 1);	// читаем из файла
+	if (player2 == human)			// для 2 игрока тоже самое
+		setsea(a2, b2);
+	else
+		setsearandom(a2, b2, 2);
+}
+
+// определяем, есть ли победитель
+int havewin() {
+	int win = 0;
+	if (hit1 == 20) win = 1;
+	if (hit2 == 20) win = 2;
+	return win;
+}
+
+// делаем ход игрока
+int getresult(char a[10][10], char b[10][10], char t[3]) {
+	int i1, j1;
+	i1 = int(t[1]) - 48;	//строка хода
+	j1 = int(t[0]) - 65;	// столбец хода
+	int result = 0;
+	if (a[i1][j1] == '*' ) {	// если попал
+		if (b[i1][j1] == ' ') {	// если до этого в эту клетку не стрелял
+			result = 1;			// Есть попадание
+			b[i1][j1] = '*';	// ставим отметку о попадании
+		}
+	}
+	else {
+		b[i1][j1] = '-';		// ставим отметку о промахе
+	}
+	return result;
+
+}
+
+// случайный ход компьютера
+void setturn(char t[]) {
+	
+	char dig[] = "0123456789";
+	int i = rand() % 10;	// случайный номер строки
+	int j = rand() % 10;	// случаный номер столбца
+	t[0] = letters[i];
+	t[1] = dig[j];
+	t[2] = '\0';
+}
+
+// процесс игры
+void game() {
+	int winner=0;			// победителя нет
+	int currentplayer = 1;	// игрок №1 ходит первым
+	char turn[3];			// ход
+	do {
+		printsea2();		// печатаем поля с ходами игроков
+		
+		// если играет человек - то читаем ход с клавиатуры, 
+		
+		cout << "current player: " << currentplayer << endl;
+		if (currentplayer == 1 && player1 == human ||
+			currentplayer == 2 && player2 == human) {
+			cout << "Your turn: ";
+			cin >> turn;
+		}
+		// иначе случайный ход
+		else setturn(turn);
+
+		int result = 0;			// результат хода
+		if (currentplayer == 1) {
+			result = getresult(a2, b1, turn);	// проверяем ход 1 игрока
+			hit1 += result;		// результат прибавляем к количеству попаданий
+		}
+		else {
+			result = getresult(a1, b2, turn);	// проверяем ход 2 игрока
+			hit2 += result;		// результат прибавляем к количеству попаданий
+		}
+		if (result == 0)			// если промах
+			if (currentplayer == 1)	// ход переходит в другому игроку
+				currentplayer = 2; 
+			else 
+				currentplayer = 1;
+		
+
+		winner = havewin();		// проверяем, есть ли победитель
+	} while (!winner);			// играем до тех пор, пока победитель не найден
+	cout << hit1 << " " << hit2 << endl;
+	if (winner == 1)		// если победитель 1 игрок
+		cout << "palyer 1 - win" << endl;
+	else					// если победитель 2 игрок
+		cout << "palyer 2 - win" << endl;
+}
+
+int main() {
+	srand(time(NULL));
+	setplayers();	// Начальные установки
+	game();			// Игра
+	return 0;
+}
