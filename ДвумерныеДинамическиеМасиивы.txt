@@ -1,0 +1,209 @@
+#include<iostream>
+using namespace std;
+
+int main() {
+	int x = 5;
+	int* p1;
+	p1 = &x;
+
+	int** p2;
+	p2 = &p1;
+	cout << x << " " << &x << " "<<endl
+		<< *p1 << " " << p1 << " "<< & p1 << endl
+		<< **p2 << " " << *p2 << " " << p2 << " " << &p2
+		<< endl;
+
+	return 0;
+}
+
+
+#include<iostream>
+using namespace std;
+
+int main() {
+	int* a;
+	int* b;
+	cout << &a << endl;
+	a = new int;			
+	*a = 3;
+	cout << *a << " " << a <<" "<<&a<< endl;
+	delete a;
+	return 0;
+}
+
+#include<iostream>
+using namespace std;
+
+int main() {
+	double* a;
+	cout << &a << endl;
+	a = new double[3];
+	a[0] = 2;
+	a[1] = 1;
+	a[2] = 5;
+
+	
+//	cout << *a << " " << a <<" "<<&a<< endl;
+
+	cout << *a << " " << *(a + 1) << " " << *(a + 2) << *(a + 3) << endl;
+	cout << a << " " << (a + 1) << " " << (a + 2) <<" " << (a + 3) << endl;
+
+!!!!	a++;
+	//cout << *(a-1) << " " <<* a << " " << *(a + 1) << " " << *(a + 2) << *(a + 3) << endl;
+
+	delete[] a;
+	return 0;
+}
+
+
+
+#include<iostream>
+using namespace std;
+
+int main() {
+	int** a;
+	
+	a = new int* [4];
+
+	for (size_t i = 0; i < 4; i++)
+		a[i] = new int[5];
+
+	for (size_t i = 0; i < 4; i++)
+		for (size_t j = 0; j < 5; j++) {
+			a[i][j] = i * j + i + j;
+		}
+
+	for (size_t i = 0; i < 4; i++){
+		for (size_t j = 0; j < 5; j++)
+			cout << a[i][j] << "\t";
+		cout << endl;
+	}
+	cout << "------------------\n";
+	
+	for (size_t i = 0; i < 4; i++)
+		for (size_t j = 0; j < 5; j++) {
+			*(*(a + i) + j) = i * j + i + j;
+		}
+
+
+	for (size_t i = 0; i < 4; i++) {
+		for (size_t j = 0; j < 5; j++)
+			cout << a[i][j] << "\t";
+		cout << endl;
+	}
+	cout << "------------------\n";
+
+
+	for (size_t i = 0; i < 4; i++)
+		for (size_t j = 0; j < 5; j++) {
+			*(a[i] + j) = i * j + i + j;
+		}
+
+
+	for (size_t i = 0; i < 4; i++) {
+		for (size_t j = 0; j < 5; j++)
+			cout << a[i][j] << "\t";
+		cout << endl;
+	}
+	cout << "------------------\n";
+
+	for (size_t i = 0; i < 4; i++)
+		for (size_t j = 0; j < 5; j++) {
+			(* (a + i))[j] = i * j + i + j;
+		}
+
+
+	for (size_t i = 0; i < 4; i++) {
+		for (size_t j = 0; j < 5; j++)
+			cout << a[i][j] << "\t";
+		cout << endl;
+	}
+	cout << "------------------\n";
+
+	for (size_t i = 0; i < 4; i++)
+		delete[] a[i];
+	delete[] a;
+	return 0;
+}
+
+
+
+#include<iostream>
+using namespace std;
+
+int main() {
+	int** a;
+	
+	a = new int* [5];
+
+	for (size_t i = 0; i < 5; i++)
+		a[i] = new int[5];
+
+	for (size_t i = 0; i < 5; i++)
+		for (size_t j = 0; j < 5; j++) {
+			a[i][j] = i * j + i + j;
+		}
+
+
+
+	for (size_t i = 0; i < 5; i++) {
+		for (size_t j = 0; j < 5; j++)
+			cout << a[i][j] << "\t";
+		cout << endl;
+	}
+	cout << "------------------\n";
+
+	for (size_t i = 0; i < 5; i++) 
+		cout << a[i][i] << "\t";
+	cout << endl;
+	cout << "------------------\n";
+
+	for (size_t i = 0; i < 5; i++)
+		cout << a[i][5-i-1] << "\t";
+	cout << endl;
+	cout << "------------------\n";
+
+
+	for (size_t i = 0; i < 5; i++) {
+		for (size_t j = 0; j <= i; j++)
+			cout << a[i][j] << "\t";
+		cout << endl;
+	}
+	cout << "------------------\n";
+
+	for (size_t i = 0; i < 5; i++) {
+		for (size_t j = i; j < 5; j++)
+			cout << a[i][j] << "\t";
+		cout << endl;
+	}
+	cout << "------------------\n";
+
+
+	for (size_t i = 0; i < 5; i++) {
+		for (size_t j = 0; j <= (5-i-1); j++)
+			cout << a[i][j] << "\t";
+		cout << endl;
+	}
+	cout << "------------------\n";
+
+	for (size_t i = 0; i < 5; i++) {
+		for (size_t j = (5-i-1); j < 5; j++)
+			cout << a[i][j] << "\t";
+		cout << endl;
+	}
+	cout << "------------------\n";
+
+
+	for (size_t i = 0; i < 5; i++) {
+		for (size_t j = i; j <= (5 - i - 1); j++)
+			cout << a[i][j] << "\t";
+		cout << endl;
+	}
+	cout << "------------------\n";
+
+
+	for (size_t i = 0; i < 5; i++)
+		delete[] a[i];
+	delete[] a;
+	return 0;
+}
