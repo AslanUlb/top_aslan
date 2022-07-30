@@ -1,0 +1,139 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	int x;
+	int& r = x;
+	int& q = x;
+	x = 5;
+	cout << x << " " << r << endl;
+	r = 15;
+	cout << x << " " << r << endl;
+
+	r++;
+	cout << x << " " << r << endl;
+
+	x++;
+	cout << q << " " << r << endl;
+
+	return 0;
+}
+
+===
+#include <iostream>
+using namespace std;
+
+void f(int &a) {
+	cout << "f: " << a << endl;
+	a = 5;
+	cout << "f: " << a << endl;
+}
+
+
+void f(int* a) {
+	cout << "f: " << a << endl;
+	*a = 5;
+	cout << "f: " << a << endl;
+}
+
+
+void arr(int& a) {
+	int* x = &a;
+
+	cout << *(x + 0) << endl;
+	cout << *(x + 1) << endl;
+	cout << *(x + 2) << endl;
+}
+
+int main() {
+
+	//f(3);
+
+	int x = 7;
+	cout << x << endl;
+	f(x);
+	cout << x << endl;
+	x = 3;
+	f(&x);
+	cout << x << endl;
+
+
+	int q[3] = { 3, 6, 1 };
+	arr(q[0]);
+
+	return 0;
+}
+
+===
+#include <iostream>
+using namespace std;
+
+void f1() {
+	cout << "f1" << endl;
+}
+
+void f2() {
+	cout << "f2" << endl;
+}
+
+void f3(int x, int y) {
+	cout << "f3" << endl;
+}
+
+
+int main() {
+
+	void (*myfunc) ();
+	void (*myfunc2) (int , int);
+
+
+	myfunc2 = f3;
+	myfunc2(3, 4);
+
+	myfunc = f1;
+	myfunc();
+
+	myfunc = f2;
+	myfunc();
+
+	return 0;
+}
+===
+#include <iostream>
+using namespace std;
+
+void f1() {
+	cout << "f1" << endl;
+}
+
+void f2() {
+	cout << "f2" << endl;
+}
+
+void f3(int x, int y) {
+	cout << "f3" << endl;
+}
+
+
+void mainf(void (*p) ()) {
+	cout << "mainf" << endl;
+	p();
+}
+
+int main() {
+	//	void (*myfunc2) (int , int);
+	//	myfunc2 = f3;
+	//	myfunc2(3, 4);
+
+
+	void (*myfunc) ();
+	
+	myfunc = f1;
+	mainf(myfunc);
+	mainf(f2);
+
+	//myfunc = f2;
+	//mainf(myfunc);
+
+	return 0;
+}
