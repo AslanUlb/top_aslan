@@ -1,0 +1,231 @@
+//	ñîçäâåì ñòðóêòóðó âèäåîìàãàçèíà
+// ñîäåðæàíèå ñòðóêòóðû
+//Íàçâàíèå ôèëüìà
+//Ðåæåññåð
+//Æàíð
+//Ðåéòèíã ïîïóëÿðíîñòè
+//Öåíà äèñêà
+//  ðåàëèçîâàòü ñëåä ôóíêöèè
+//Ïîèñê ïî íàçâàíèþ
+//Ïîèñê ïî æàíðó
+//Ïîèñê ïî ðåæåñåðó
+//Ñàìûé ïîïóëÿðíûé ôèëüì â æàíðå
+//Ïîêàç âñåõ çàïèñåé
+//Äîáàâëåíèå
+//
+
+#include <iostream>
+using namespace std;
+
+struct film
+{
+	char title[20];//íàçâàíèå ôèëüìà
+	char director[20];//ðàæåñåð
+	char genre[20];//æàíð
+	double rating;//ðåéòèíã
+	double price;//öåíà äèñê
+};
+
+void ShowList(film*& a, int& size)//ïîêàçûâàåò âñå äîáàâëåííûå ôèëüìû
+{
+	for (size_t i = 0; i < size; i++)
+	{
+		cout << "Title : " << a[i].title << endl;
+		cout << "Director by : " << a[i].director << endl;
+		cout << "Genre : " << a[i].genre << endl;
+		cout << "Rating : " << a[i].rating << endl;
+		cout << "Price : " << a[i].price << endl;
+	}
+	cout << "\n";
+	system("pause");
+}
+
+void ShowOneFilm(film a)//ïîêàçûâààåò îäèí ôèëüì
+{
+	cout << "Title : " << a.title << endl;
+	cout << "Director by : " << a.director << endl;
+	cout << "Genre : " << a.genre << endl;
+	cout << "Rating : " << a.rating << endl;
+	cout << "Price : " << a.price << endl;
+}
+
+film addFilm()//ôóíêöèÿ äîáàâëåíèÿ ôèëüìà âðó÷íóþ
+{
+	film temp;
+	cout << "Film title: ";
+	gets_s(temp.title, 20);
+	
+	//gets_s(temp.title, 20);
+	cout << "Film Director: ";
+	gets_s(temp.director, 20);
+	cout << "Film genre: ";
+	gets_s(temp.genre, 20);
+	cout << "Film rating: ";
+	cin >> temp.rating;
+	cout << "Film price: ";
+	cin >> temp.price;
+	return temp;
+}
+//
+void pushBackList(film *&arr, int& sizea) //ïî÷åìó ýòà ôóíêöèÿ ðàáîòàåò íåêîððåêòíî???
+{
+	film* newarr;
+	
+	
+	newarr = new film[sizea + 1];
+	//newarr = nullptr;
+	for (size_t i = 0; i < sizea; i++) 
+	{
+		newarr[i] = arr[i];
+	}
+	//newarr = NULL;
+	newarr[sizea++] = addFilm();
+
+	
+	delete[] arr;
+
+	arr = newarr;
+}
+/*
+void pushBackList(film*& a, int& sizea)//äîàâëåíèå íîâîãî ôèëüìà âêîíåö ñïèñêà
+{
+	film* tmp;
+	tmp = a;
+	a = new film[sizea + 1];
+	for (size_t i = 0; i < sizea; i++)
+	{
+		a[i] = tmp[i];
+	}
+	a[sizea++] = addFilm();
+	delete[] tmp;
+}
+*/
+void searchTitle(film*& a, int& sizea)
+{
+	//Ôóíêöèÿ strcmp() 
+	//îñóùåñòâëÿåò ëåêñèêîãðàôè÷åñêóþ ïðîâåðêó äâóõ ñòðîê, 
+	//îêàí÷èâàþùèõñÿ íóëåâûìè ñèìâîëàìè, è âîçâðàùàåò öåëîå ÷èñëî ñî ñëåäóþùèì 
+	//çíà÷åíèåì:
+	//ìåíüøå 0 åñëè str1 < str2
+	// 0 åñëè str1 = str2
+	//áîëüøå 0 åñëè str1 > str2
+	//
+	cout << "Enter title: " << endl;
+	film s;
+	cin >> s.title;
+
+	for (size_t i = 0; i < sizea; i++)
+	{
+		if (strcmp(a[i].title, s.title) == 0)
+			ShowOneFilm(a[i]);
+	}
+	system("pause");
+}
+
+void searchGenre(film*& a, int& sizea)
+{
+	cout << "Enter genre: " << endl;
+	film s;
+	cin >> s.genre;
+
+	for (size_t i = 0; i < sizea; i++)
+	{
+		if (strcmp(a[i].genre, s.genre) == 0)
+			ShowOneFilm(a[i]);
+	}
+	system("pause");
+}
+
+void searchDirector(film*& a, int& sizea)
+{
+	cout << "Enter Director: " << endl;
+	film s;
+	cin >> s.director;
+
+	for (size_t i = 0; i < sizea; i++)
+	{
+		if (strcmp(a[i].director, s.director) == 0)
+			ShowOneFilm(a[i]);
+	}
+	system("pause");
+}
+
+void MostPopFilmGenre(film*& a, int& sizea)
+{
+	cout << "Enter Genre: ";
+	film s;
+	cin >> s.genre;
+	int b = 0, tmp = a[0].rating;
+	for (size_t i = 0; i < sizea; i++)
+	{
+		if (strcmp(a[i].genre, s.genre) == 0)
+		{
+			if (a[i].rating > tmp)
+			{
+				tmp = a[i].rating;
+				b = i;
+			}
+		}
+	}
+	cout << "Most popular film in genre " << a[b].genre << " is " << a[b].title << endl;
+	cout << " with rating : " << a[b].rating << endl;
+	system("pause");
+}
+
+void menu(film*& b, int& sizeb)
+{
+	cout << "\tHello, world!\n";
+	cout << "Add first film" << endl;
+	cout << "Skip first add " << endl;
+	b[0] = addFilm();
+
+	int choice;
+	do
+	{
+		system("cls");
+		cout << "\tMenu\n";
+		cout << "Menu: 1 - search by title\n";
+		cout << "Menu: 2 - search by genre\n";
+		cout << "Menu: 3 - search by director\n";
+		cout << "Menu: 4 - most popular movie\n";
+		cout << "Menu: 5 - show all\n";
+		cout << "Menu: 6 - add film\n";
+		cout << "Menu: 0 - exit\n";
+		cout << "Your choise: ";
+		cin >> choice;
+		switch (choice)
+		{
+		case 1:
+			searchTitle(b, sizeb);
+			break;
+		case 2:
+			searchGenre(b, sizeb);
+			break;
+		case 3:
+			searchDirector(b, sizeb);
+			break;
+		case 4:
+			MostPopFilmGenre(b, sizeb);
+			break;
+		case 5:
+			ShowList(b, sizeb);
+			break;
+		case 6:
+			pushBackList(b, sizeb);
+			break;
+		}
+	} while (choice != 0);
+}
+
+
+int main()
+{
+	int sizelist = 1;
+	film* ListFilm = new film[sizelist];
+
+	menu(ListFilm, sizelist);
+
+	delete[] ListFilm;
+
+	return 0;
+}
