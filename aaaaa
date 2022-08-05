@@ -1,0 +1,185 @@
+#include<iostream>
+#include<fstream>
+#include<cstring>
+#include<conio.h>
+#include <io.h>
+using namespace std;
+
+struct library {
+	char UDK[10];
+	char author_name[30];
+	char title[20];
+	int year_publ;
+	int number_cop;
+};
+
+void loaddata_bin(library* c, int& n) {
+	FILE* f;
+	struct _finddata_t myfileinfo;
+	intptr_t done = _findfirst("library.txt", &myfileinfo);
+	if (done == -1) {
+		fopen_s(&f, "library.txt", "wb");
+		fclose(f);
+	}
+
+	fopen_s(&f, "library.txt", "rb");
+	while (!feof(f)) {
+		fread(&c[n], sizeof(library), 1, f);
+		n++;
+	}
+	fclose(f);
+	n--;
+
+}
+
+void print(library a[], int n) {
+	// перебираем все книги (элементы в массиве)
+	for (size_t i = 0; i < n; i++)
+	{
+		cout << "Book #" << i + 1 << endl;
+		cout << "\t" << a[i].UDK << endl;
+		cout << "\t" << a[i].author_name << endl;
+		cout << "\t" << a[i].title << endl;
+		cout << "\t" << a[i].year_publ << endl;
+		cout << "\t" << a[i].number_cop << endl;
+	}
+	system("pause");
+}
+
+void find_by_title(library a[], int n)
+{
+	char find_title[20];
+	cout << "Input title of searching book: ";
+	cin >> find_title;
+	for (size_t i = 0; i < n; i++)
+	{
+		if (strcmp(a[i].title, find_title))
+		{
+			cout << "Book #" << i + 1 << endl;
+			cout << "\t" << a[i].UDK << endl;
+			cout << "\t" << a[i].author_name << endl;
+			cout << "\t" << a[i].title << endl;
+			cout << "\t" << a[i].year_publ << endl;
+			cout << "\t" << a[i].year_publ << endl;
+		}
+	}
+}
+
+void find_by_udk(library a[], int n)
+{
+	library new_a[1000];
+	int new_n = 0;
+	char find_udk[10];
+	cout << "Input udk of searching book: ";
+	cin >> find_udk;
+	for (size_t i = 0; i < n; i++)
+	{
+		if (strcmp(a[i].UDK, find_udk))
+		{
+			new_a[new_n] = a[i];
+			new_n++;
+		}
+	}
+	for (size_t i = 0; i < new_n-1; i++)
+		for (size_t j =i + 1; j < new_n; j++)
+		{
+			if (new_a[i].year_publ > new_a[j].year_publ)
+			{
+				library temp = new_a[i];
+				new_a[i] = new_a[j];
+				new_a[j] = temp;
+			}
+		}
+	print(new_a, new_n);
+}
+
+void add(library a[], int& n) {
+	// создаем новую структуру
+	library newbook;
+
+	// заполняем ее поля значениями с клавиатуры
+	cout << "UDK: ";
+	cin >> newbook.UDK;
+	cout << "Author name: ";
+	cin >> newbook.author_name;
+	cout << "Title: ";
+	cin >> newbook.title;
+	cout << "Year publ: ";
+	cin >> newbook.year_publ;
+	cout << "Number of copies: ";
+	cin >> newbook.number_cop;
+	// добавляем новую структуру в массив
+	a[n] = newbook;
+	// увеличиваем количество элементов в массиве на 1
+	n++;
+}
+
+void delete_book(library a[], int& n) {
+	// перебираем все книги (элементы в массиве)
+	char dell_title[20];
+	int dell_i=-1;
+	cout << "Input title of deleting book: ";
+	cin >> dell_title;
+	for (size_t i = 0; i < n; i++)
+		if (strcmp(a[i].title, dell_title))
+		{
+			dell_i = i;
+			break;
+		}	
+
+	if (dell_i >=0)	{
+		for (size_t i = dell_i; i < (n - 1); i++)
+			a[i] = a[i + 1];
+		n--;
+	}
+	
+}
+
+void savedata_bin(library* c, int n) {
+	FILE* f;
+
+	fopen_s(&f, "library.txt", "wb");
+	fwrite(&c[0], sizeof(library), n, f);
+	fclose(f);
+}
+
+
+int main() {
+	library c[10000];
+	int n = 0;
+	int k;
+	loaddata_bin(c, n);
+
+	do {
+		system("cls");
+		cout << "1 - print" << endl;
+		cout << "2 - add" << endl;
+		cout << "3 - delete book" << endl;
+		cout << "4 - find by udk" << endl;
+		cout << "5 - find by title" << endl;
+		cout << "0 - quit" << endl;
+		cin >> k;
+
+		switch (k) {
+		case 1:
+			print(c, n);
+			break;
+		case 2:
+			add(c, n);
+			break;
+		case 3:
+			delete_book(c, n);
+			break;
+		case 4:
+			find_by_udk(c, n);
+			break;
+		case 5:
+			find_by_title(c, n);
+			break;
+		}
+	} while (k != 0);
+
+	savedata_bin(c, n);
+
+	return 0;
+}
