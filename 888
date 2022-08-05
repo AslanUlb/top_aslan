@@ -1,25 +1,117 @@
+#define __CRT_SECURE_NO_WARNINGS
 #include <iostream>
+#include <fstream>
+#include <cstdio>
+#include <string>
 using namespace std;
 
-void rrr(int *&a, int& n) {
-	int* p = new int[5];
-	for (int i = 0; i < n; ++i) {
-		p[i] = i + 10;
-	}
-	a = p;
-	cout << a[1];
+struct VideoShop
+{
+	char Name[20];
+	char Director[20];
+	char genre[20];
+	double rating;
+	double price;
+
+};
+
+void input_file(string name, int& n) {
 
 }
 
-int main() {
-	int n = 5;
-	int *a = new int[n];
-	for (int i = 0; i < n; ++i) {
-		a[i] = i + 1;
+
+void search_by_foo(string name, int size) {
+
+}
+
+void most_popar_movie(string name, int size) {
+
+}
+
+void show_all() {
+	string path = "films.txt";
+	ifstream fin;
+	fin.open(path);
+	if (!fin.is_open())
+	{
+		cout << "Ошибка открытия файла" << endl;
 	}
-	
-	rrr(a, n);
-	cout << endl;
-	cout << a[1];
+	else
+	{
+		cout << "Файл открыт!" << endl;
+		string str;
+		while (!fin.eof())
+		{
+			str = "";
+			getline(fin, str);
+			cout << str << endl;
+		}
+	}
+}
+
+VideoShop add_movie() {
+	VideoShop temp;
+	cout << "Film title: ";
+	gets_s(temp.Name, 20);
+	cout << "Film Director: ";
+	gets_s(temp.Director, 20);
+	cout << "Film genre: ";
+	gets_s(temp.genre, 20);
+	cout << "Film rating: ";
+	cin >> temp.rating;
+	cout << "Film price: ";
+	cin >> temp.price;
+	return temp;
+}
+
+
+void menu(VideoShop*& b, int& sizeb)
+{
+	cout << "Add first film" << endl;
+	cout << "Skip first add " << endl;
+	b[0] = add_movie();
+
+	int choice;
+	do
+	{
+		system("cls");
+		cout << "\tMenu\n";
+		cout << "Menu: 1 - search by Name\n";
+		cout << "Menu: 2 - search by Director\n";
+		cout << "Menu: 3 - search by director\n";
+		cout << "Menu: 4 - most popular movie\n";
+		cout << "Menu: 5 - show all\n";
+		cout << "Menu: 6 - add movie\n";
+		cout << "Menu: 0 - exit\n";
+		cout << "Your choise: ";
+		cin >> choice;
+		switch (choice)
+		{
+		case 1:
+			searchTitle(b, sizeb);
+			break;
+		case 2:
+			searchGenre(b, sizeb);
+			break;
+		case 3:
+			searchDirector(b, sizeb);
+			break;
+		case 4:
+			MostPopFilmGenre(b, sizeb);
+			break;
+		case 5:
+			ShowList(b, sizeb);
+			break;
+		case 6:
+			pushBackList(b, sizeb);
+			break;
+		}
+	} while (choice != 0);
+}
+
+
+int main() {
+	setlocale(LC_ALL, "ru");
+	show_all();
 	return 0;
 }
