@@ -1,0 +1,210 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+	FILE* f;
+	//int x[5] = {4, 6, 23, 7, 4};
+	int x[6];
+
+	//fopen_s(&f, "t.txt", "wb");
+	//fwrite(&x, sizeof(int), 5, f);
+	//fclose(f);
+
+	//fopen_s(&f, "t.txt", "rb");
+	//fread(&x, sizeof(int), 4, f);
+	//fclose(f);
+
+	fopen_s(&f, "t.txt", "rb");
+	int n = 0;
+	while (!feof(f)) {
+		fread(&x[n], sizeof(int), 1, f);
+		n++;
+	}
+	n--;
+	fclose(f);
+
+	for (size_t i = 0; i < n; i++)
+	{
+		cout << x[i] << endl;
+	}
+
+	return 0;
+}
+===
+#include <iostream>
+using namespace std;
+
+struct s {
+	int x;
+	double y;
+};
+
+int main() {
+	FILE* f;
+	s arr[100];
+	int n;
+/*
+	arr[0].x = 5;
+	arr[0].y = 5.2;
+
+	arr[1].x = 15;
+	arr[1].y = 15.2;
+
+	arr[2].x = 35;
+	arr[2].y = 25.2;
+
+	n = 3;
+*/
+
+	//открыли бинарный файл для записи
+	fopen_s(&f, "s.txt", "b");
+	// записываем в файл целое число - количество записей
+	fwrite(&n, sizeof(int), 1, f);
+	// записываем данные в количестве n записей
+	fwrite(&arr, sizeof(s), n, f);
+	fclose(f);
+
+	// открыли файл для чтения
+	fopen_s(&f, "s.txt", "rb");
+	//чистаем количество структур
+	fread(&n, sizeof(int), 1, f);
+	//считываем n структур
+	fread(&arr, sizeof(s), n, f);
+	fclose(f);
+
+	for (size_t i = 0; i < n; i++)
+		cout << arr[i].x << " " << arr[i].y << endl;
+
+	return 0;
+}
+===
+#include <iostream>
+using namespace std;
+
+struct s {
+	int x;
+	double y;
+};
+
+int main() {
+	FILE* f;
+	s arr[100];
+	int n;
+
+	arr[0].x = 5;
+	arr[0].y = 5.2;
+
+	arr[1].x = 15;
+	arr[1].y = 15.2;
+
+	arr[2].x = 35;
+	arr[2].y = 25.2;
+
+	n = 3;
+
+
+	//открыли бинарный файл для записи
+	fopen_s(&f, "s.txt", "wb");
+	// записываем в файл целое число - количество записей
+	//fwrite(&n, sizeof(int), 1, f);
+	// записываем данные в количестве n записей
+	fwrite(&arr[0], sizeof(s), 1, f);
+	fclose(f);
+
+
+	//открыли бинарный файл для записи
+	fopen_s(&f, "s.txt", "ab");
+	// записываем в файл целое число - количество записей
+	//fwrite(&n, sizeof(int), 1, f);
+	// записываем данные в количестве n записей
+	fwrite(&arr[1], sizeof(s), 1, f);
+	fclose(f);
+
+
+
+	// открыли файл для чтения
+	fopen_s(&f, "s.txt", "rb");
+	//чистаем количество структур
+	//fread(&n, sizeof(int), 1, f);
+	//считываем n структур
+	n = 0;
+	while (!feof(f)){
+		fread(&arr[n], sizeof(s), 1, f);
+		n++;
+	}
+	fclose(f);
+
+	for (size_t i = 0; i < 2; i++)
+		cout << arr[i].x << " " << arr[i].y << endl;
+
+	return 0;
+}
+
+
+
+====
+
+#include <iostream>
+using namespace std;
+
+struct s {
+	int x;
+	double y;
+};
+
+int main() {
+	FILE* f;
+	s arr[100];
+	int n;
+
+	arr[0].x = 5;
+	arr[0].y = 5.2;
+
+	arr[1].x = 15;
+	arr[1].y = 15.2;
+
+	arr[2].x = 35;
+	arr[2].y = 25.2;
+
+	n = 3;
+
+
+	//открыли бинарный файл для записи
+	fopen_s(&f, "s.txt", "wb");
+	// записываем в файл целое число - количество записей
+	//fwrite(&n, sizeof(int), 1, f);
+	// записываем данные в количестве n записей
+	fwrite(&arr[0], sizeof(s), 1, f);
+	fclose(f);
+
+
+	//открыли бинарный файл для записи
+	fopen_s(&f, "s.txt", "ab");
+	// записываем в файл целое число - количество записей
+	//fwrite(&n, sizeof(int), 1, f);
+	// записываем данные в количестве n записей
+	fwrite(&arr[1], sizeof(s), 1, f);
+	fclose(f);
+
+
+
+	// открыли файл для чтения
+	fopen_s(&f, "s.txt", "rb");
+	//чистаем количество структур
+	//fread(&n, sizeof(int), 1, f);
+	//считываем n структур
+	n = 0;
+	while (!feof(f)){
+		fread(&arr[n], sizeof(s), 1, f);
+		n++;
+	}
+	fclose(f);
+
+	for (size_t i = 0; i < 2; i++)
+		cout << arr[i].x << " " << arr[i].y << endl;
+
+	return 0;
+}
+
+
+
