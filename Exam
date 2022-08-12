@@ -1,0 +1,224 @@
+#include <iostream>
+#include<fstream>
+#include<cstring>
+#include<conio.h>
+#include <io.h>
+
+using namespace std;
+
+const int a = 1000;
+
+struct TRAIN
+{
+	char pointA[15];
+	char pointB[15];
+	char numberTrain[15];
+	int time_dep[2];
+};
+
+void LoadDataTrain(TRAIN* n, int& size)
+{
+	FILE* f;
+	struct _finddata_t myfileinfo;
+	intptr_t done = _findfirst("train.txt", &myfileinfo);
+	if (done == -1) {
+		fopen_s(&f, "train.txt", "wb");
+		fclose(f);
+	}
+	fopen_s(&f, "train.txt", "rb");
+	while (!feof(f)) {
+
+		fread(&n[size], sizeof(TRAIN), 1, f);
+		n++;
+	}
+	fclose(f);
+	n--;
+
+}
+void savedata_bin(TRAIN* a, int& n) {
+	FILE* f;
+	const char* filename = "FirstFile.txt";
+	fopen_s(&f, "train.txt", "wb");
+	fwrite(&a[0], sizeof(TRAIN), n, f);
+	fclose(f);
+}
+
+void add_train(TRAIN n[], int& size) {
+	// создаем новую структуру
+	TRAIN newtr;
+
+	// заполняем ее поля значениями с клавиатуры
+	if (size <= a)
+	{
+		cout << "Пункт отправления: ";
+		cin >> newtr.pointA;
+		cout << "Пункт прибытия: ";
+		cin >> newtr.pointB;
+		cout << "Номер поезда: ";
+		cin >> newtr.numberTrain;
+		cout << "Время отправления: ";
+		cout << "Час отправления: ";
+		cin >> newtr.time_dep[0];
+		cout << "Минуты отправления: ";
+		cin >> newtr.time_dep[1];
+		// добавляем новую структуру в массив
+		n[size] = newtr;
+		// увеличиваем количество элементов в массиве на 1
+		size++;
+	}
+	else
+	{
+		cout << "Превышено максимальное значение элементов структуры";
+	}
+}
+
+void sort_train(TRAIN* a, int n) {
+	for (size_t i = 0; i < n - 1; i++)
+	{
+		for (size_t j = i + 1; j < n; j++)
+		{
+			if (strcmp(a[i].numberTrain, a[j].numberTrain) > 0) {
+				TRAIN tmp = a[i];
+				a[i] = a[j];
+				a[j] = tmp;
+			}
+		}
+	}
+}
+
+void delete_train(TRAIN a[], int& size) {
+	char dell_train[15];
+	int dell_i;
+	cout << "Введите удаляемый номер поезда:";
+	cin >> dell_train;
+	for (int i = 0; i < size; i++)
+		if (strcmp(a[i].numberTrain, dell_train))
+		{
+			dell_i = i;
+			break;
+		}
+
+	if (dell_i >= 0) {
+		for (size_t i = dell_i; i < (size - 1); i++)
+			a[i] = a[i + 1];
+		size--;
+	}
+
+}
+
+void searchcpointA(TRAIN n[], char a[], int size) {
+
+	for (int i = 0; i < size; i++) {
+		if (strcmp(a, n[i].pointA) == 0)
+		{
+			cout << n[i].pointA << endl;
+			cout << n[i].pointB << endl;
+			cout << n[i].numberTrain << endl;
+			cout << n[i].time_dep << endl;
+		}
+		break;
+	}		
+}
+
+void searchcpointB(TRAIN n[], char a[], int size) {
+
+	for (int i = 0; i < size; i++) {
+		if (strcmp(a, n[i].pointA) == 0)
+		{
+			cout << n[i].pointA << endl;
+			cout << n[i].pointB << endl;
+			cout << n[i].numberTrain << endl;
+			cout << n[i].time_dep << endl;
+		}
+		break;
+	}
+}
+
+void searchcnumberTrain(TRAIN n[], char a[], int size) {
+
+	for (int i = 0; i < size; i++) {
+		if (strcmp(a, n[i].pointA) == 0)
+		{
+			cout << n[i].pointA << endl;
+			cout << n[i].pointB << endl;
+			cout << n[i].numberTrain << endl;
+			cout << n[i].time_dep << endl;
+		}
+		break;
+	}
+}
+
+void vpoisk(TRAIN n[], int size) {
+	cout << "Выберите параметр поиска" << endl;
+	cout << "1 - Поиск по Пункту отправления" << endl;
+	cout << "2 - Поиск по Назначения" << endl;
+	cout << "3 - Поиск по номеру поезда" << endl;
+	int b;
+	cin >> b;
+	char a[15];
+	cin >> a;
+	switch (b) {
+	case 1:
+		searchcpointA(n, a, size);
+		break;
+	case 2:
+		searchcpointB(n, a, size);
+		break;
+	case 3:
+		searchcnumberTrain(n, a, size);
+		break;
+
+	default:
+		cout << "Ошибка выбора!";
+	}
+}
+
+void print(TRAIN a[], int n) {
+	for (size_t i = 0; i < n; i++)
+		{
+			cout << "Поезд № " << i + 1 << endl;
+			cout << "\t" << a[i].pointA << endl;
+			cout << "\t" << a[i].pointB << endl;
+			cout << "\t" << a[i].numberTrain << endl;
+			cout << "\t" << a[i].time_dep << endl;
+		}
+	}
+
+int main() {
+	TRAIN n[a];
+	int k, size = 0;
+	setlocale(LC_ALL, "ru");
+	LoadDataTrain(n, size);
+		do
+		{
+			system("cls");
+			cout << "1 Добовление данных" << endl;
+			cout << "2 Удаление записи" << endl;
+			cout << "3 Печать списка" << endl;
+			cout << "4 Поиск " << endl;
+			cout << "5 Cортировка по номеру поезда" << endl;
+			cout << "0 Выход " << endl;
+			cin >> k;
+
+			switch (k) {
+			case 1:
+				add_train(n, size);
+				break;
+			case 2:
+				delete_train(n, size);
+				break;
+			case 3:
+				print(n, size);
+				break;
+			case 4:
+				vpoisk(n, size);
+				break;
+			case 5:
+				sort_train(n, size);
+				break;
+
+			}
+		} while (k != 0);
+
+	return 0;
+}
