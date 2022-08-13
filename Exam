@@ -27,19 +27,20 @@ void LoadDataTrain(TRAIN* n, int& size)
 	}
 	fopen_s(&f, "train.txt", "rb");
 	while (!feof(f)) {
-
 		fread(&n[size], sizeof(TRAIN), 1, f);
-		n++;
+		size++;
 	}
 	fclose(f);
-	n--;
+	size--;
+	cout << size;
 
 }
-void savedata_bin(TRAIN* a, int& n) {
+void save_file_tr(TRAIN* n, int& size) {
 	FILE* f;
-	const char* filename = "FirstFile.txt";
+	//const char* filename = "train.txt";
+	//const char* filename = "FirstFile.txt";
 	fopen_s(&f, "train.txt", "wb");
-	fwrite(&a[0], sizeof(TRAIN), n, f);
+	fwrite(&n[0], sizeof(TRAIN), size, f);
 	fclose(f);
 }
 
@@ -72,18 +73,15 @@ void add_train(TRAIN n[], int& size) {
 	}
 }
 
-void sort_train(TRAIN* a, int n) {
-	for (size_t i = 0; i < n - 1; i++)
-	{
-		for (size_t j = i + 1; j < n; j++)
-		{
-			if (strcmp(a[i].numberTrain, a[j].numberTrain) > 0) {
-				TRAIN tmp = a[i];
-				a[i] = a[j];
-				a[j] = tmp;
+void sort_train(TRAIN n[], int size) {
+	for (size_t i = 0; i < size - 1; i++)
+		for (size_t j = i + 1; j < size; j++)
+			if(strcmp(n[i].numberTrain, n[j].numberTrain) > 0) //(n[i].numberTrain > n[j].numberTrain) 
+			{
+				TRAIN tmp = n[i];
+				n[i] = n[j];
+				n[j] = tmp;
 			}
-		}
-	}
 }
 
 void delete_train(TRAIN a[], int& size) {
@@ -91,81 +89,80 @@ void delete_train(TRAIN a[], int& size) {
 	int dell_i;
 	cout << "Введите удаляемый номер поезда:";
 	cin >> dell_train;
+	cout << size << endl;
 	for (int i = 0; i < size; i++)
-		if (strcmp(a[i].numberTrain, dell_train))
+		if (!strcmp(a[i].numberTrain, dell_train))
 		{
 			dell_i = i;
 			break;
 		}
-
-	if (dell_i >= 0) {
-		for (size_t i = dell_i; i < (size - 1); i++)
+	if (size > 1)
+		for (size_t i = dell_i; i < size; i++)
 			a[i] = a[i + 1];
-		size--;
-	}
-
+	size--;
 }
 
-void searchcpointA(TRAIN n[], char a[], int size) {
-
+void search_pointA(TRAIN n[], char c[], int size) {
 	for (int i = 0; i < size; i++) {
-		if (strcmp(a, n[i].pointA) == 0)
+		if (strcmp(c, n[i].pointA) == 0)
 		{
-			cout << n[i].pointA << endl;
-			cout << n[i].pointB << endl;
-			cout << n[i].numberTrain << endl;
-			cout << n[i].time_dep << endl;
+			cout << "\t" << n[i].pointA << endl;
+			cout << "\t" << n[i].pointB << endl;
+			cout << "\t" << n[i].numberTrain << endl;
+			cout << "\t" << n[i].time_dep[0] << ":" << n[i].time_dep[1] << endl;
 		}
-		break;
-	}		
-}
-
-void searchcpointB(TRAIN n[], char a[], int size) {
-
-	for (int i = 0; i < size; i++) {
-		if (strcmp(a, n[i].pointA) == 0)
-		{
-			cout << n[i].pointA << endl;
-			cout << n[i].pointB << endl;
-			cout << n[i].numberTrain << endl;
-			cout << n[i].time_dep << endl;
-		}
+		system("pause");
 		break;
 	}
 }
 
-void searchcnumberTrain(TRAIN n[], char a[], int size) {
-
+void search_pointB(TRAIN n[], char c[], int size) {
 	for (int i = 0; i < size; i++) {
-		if (strcmp(a, n[i].pointA) == 0)
+		if (strcmp(c, n[i].pointB) == 0)
 		{
-			cout << n[i].pointA << endl;
-			cout << n[i].pointB << endl;
-			cout << n[i].numberTrain << endl;
-			cout << n[i].time_dep << endl;
+			cout << "\t" << n[i].pointA << endl;
+			cout << "\t" << n[i].pointB << endl;
+			cout << "\t" << n[i].numberTrain << endl;
+			cout << "\t" << n[i].time_dep[0] << ":" << n[i].time_dep[1] << endl;
 		}
+		system("pause");
 		break;
 	}
 }
 
-void vpoisk(TRAIN n[], int size) {
+void search_num_Tr(TRAIN n[], char c[], int size) {
+	for (int i = 0; i < size; i++) {
+		if (strcmp(c, n[i].numberTrain) == 0)
+		{
+			cout << "\t" << n[i].pointA << endl;
+			cout << "\t" << n[i].pointB << endl;
+			cout << "\t" << n[i].numberTrain << endl;
+			cout << "\t" << n[i].time_dep[0] << ":" << n[i].time_dep[1] << endl;
+		}
+		system("pause");
+		break;
+	}
+}
+
+void train_search(TRAIN n[], int size) {
 	cout << "Выберите параметр поиска" << endl;
 	cout << "1 - Поиск по Пункту отправления" << endl;
 	cout << "2 - Поиск по Назначения" << endl;
 	cout << "3 - Поиск по номеру поезда" << endl;
 	int b;
 	cin >> b;
-	char a[15];
-	cin >> a;
+	char c[15];
+	cout << "Введите искомый элемент: " << endl;
+	cin >> c;
 	switch (b) {
 	case 1:
-		searchcpointA(n, a, size);
+		search_pointA(n, c, size);
 		break;
 	case 2:
-		searchcpointB(n, a, size);
+		search_pointB(n, c, size);
 		break;
 	case 3:
-		searchcnumberTrain(n, a, size);
+		search_num_Tr(n, c, size);
 		break;
 
 	default:
@@ -173,52 +170,53 @@ void vpoisk(TRAIN n[], int size) {
 	}
 }
 
-void print(TRAIN a[], int n) {
-	for (size_t i = 0; i < n; i++)
-		{
-			cout << "Поезд № " << i + 1 << endl;
-			cout << "\t" << a[i].pointA << endl;
-			cout << "\t" << a[i].pointB << endl;
-			cout << "\t" << a[i].numberTrain << endl;
-			cout << "\t" << a[i].time_dep << endl;
-		}
+void print(TRAIN n[], int size) {
+	for (size_t i = 0; i < size; i++)
+	{
+		cout << "Поезд № " << i + 1 << endl;
+		cout << "\t" << n[i].pointA << endl;
+		cout << "\t" << n[i].pointB << endl;
+		cout << "\t" << n[i].numberTrain << endl;
+		cout << "\t" << n[i].time_dep[0]<<":"<< n[i].time_dep[1] << endl;
 	}
+	system("pause");
+}
 
 int main() {
 	TRAIN n[a];
 	int k, size = 0;
 	setlocale(LC_ALL, "ru");
 	LoadDataTrain(n, size);
-		do
-		{
-			system("cls");
-			cout << "1 Добовление данных" << endl;
-			cout << "2 Удаление записи" << endl;
-			cout << "3 Печать списка" << endl;
-			cout << "4 Поиск " << endl;
-			cout << "5 Cортировка по номеру поезда" << endl;
-			cout << "0 Выход " << endl;
-			cin >> k;
+	do
+	{
+		system("cls");
+		cout << "1 Добавление данных" << endl;
+		cout << "2 Удаление записи" << endl;
+		cout << "3 Печать списка" << endl;
+		cout << "4 Поиск " << endl;
+		cout << "5 Cортировка по номеру поезда" << endl;
+		cout << "0 Выход " << endl;
+		cin >> k;
 
-			switch (k) {
-			case 1:
-				add_train(n, size);
-				break;
-			case 2:
-				delete_train(n, size);
-				break;
-			case 3:
-				print(n, size);
-				break;
-			case 4:
-				vpoisk(n, size);
-				break;
-			case 5:
-				sort_train(n, size);
-				break;
+		switch (k) {
+		case 1:
+			add_train(n, size);
+			break;
+		case 2:
+			delete_train(n, size);
+			break;
+		case 3:
+			print(n, size);
+			break;
+		case 4:
+			train_search(n, size);
+			break;
+		case 5:
+			sort_train(n, size);
+			break;
 
-			}
-		} while (k != 0);
-
+		}
+	} while (k != 0);
+	save_file_tr(n, size);
 	return 0;
 }
